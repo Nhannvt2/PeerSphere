@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết Quả Đánh Giá Áp Lực Đồng Trang Lứa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --info-color: #4361ee;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .result-card {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .result-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .result-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .result-body {
+            padding: 30px;
+        }
+
+        .score-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .score-circle-inner {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 16px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .assessment-container {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .assessment-title {
+            font-size: 20px;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .assessment-title:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .assessment-text {
+            font-size: 17px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .score-ranges {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .score-ranges h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .score-ranges ul {
+            list-style-type: none;
+        }
+
+        .score-ranges li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            font-size: 15px;
+            border-left: 4px solid var(--accent-color);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .score-ranges li:nth-child(1) {
+            border-left-color: #4cc9f0;
+        }
+
+        .score-ranges li:nth-child(2) {
+            border-left-color: #4361ee;
+        }
+
+        .score-ranges li:nth-child(3) {
+            border-left-color: #3a0ca3;
+        }
+
+        .score-ranges li:nth-child(4) {
+            border-left-color: #f72585;
+        }
+
+        .detailed-scores {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        .detailed-scores h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .detailed-scores h2:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .scores-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .scores-table th,
+        .scores-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .scores-table th {
+            background-color: var(--light-color);
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .scores-table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            text-align: center;
+            min-width: 40px;
+        }
+
+        .score-badge-3 {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: #4cc9f0;
+        }
+
+        .score-badge-2 {
+            background-color: rgba(67, 97, 238, 0.2);
+            color: #4361ee;
+        }
+
+        .score-badge-1 {
+            background-color: rgba(58, 12, 163, 0.2);
+            color: #3a0ca3;
+        }
+
+        .score-badge-0 {
+            background-color: rgba(247, 37, 133, 0.2);
+            color: #f72585;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            margin-left: 10px;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .suggestions {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+
+        .suggestions h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .suggestions h2:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .suggestion-item {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .suggestion-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-size: 20px;
+            line-height: 1.2;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+                margin: 20px auto;
+            }
+
+            .result-header {
+                padding: 20px 15px;
+            }
+
+            .result-header h1 {
+                font-size: 24px;
+            }
+
+            .result-body {
+                padding: 20px;
+            }
+
+            .score-circle {
+                width: 140px;
+                height: 140px;
+            }
+
+            .score-circle-inner {
+                width: 120px;
+                height: 120px;
+            }
+
+            .score-value {
+                font-size: 40px;
+            }
+
+            .assessment-container {
+                padding: 20px;
+            }
+
+            .detailed-scores {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 15px;
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-header h1 {
+                font-size: 22px;
+            }
+
+            .score-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .score-circle-inner {
+                width: 100px;
+                height: 100px;
+            }
+
+            .score-value {
+                font-size: 34px;
+            }
+
+            .assessment-title, .detailed-scores h2, .suggestions h2 {
+                font-size: 18px;
+            }
+
+            .assessment-text {
+                font-size: 15px;
+            }
+
+            .scores-table th, .scores-table td {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            <div class="result-header">
+                <h1>Kết Quả Đánh Giá Áp Lực Đồng Trang Lứa</h1>
+                <p>Dưới đây là kết quả đánh giá mức độ ảnh hưởng của áp lực đồng trang lứa đối với bạn</p>
+            </div>
+
+            <div class="result-body">
+                <div class="score-container">
+                    <div class="score-circle">
+                        <div class="score-circle-inner">
+                            <div class="score-value">{{ score }}</div>
+                            <div class="score-label">điểm</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assessment-container">
+                    <h2 class="assessment-title">Đánh giá của bạn</h2>
+                    <p class="assessment-text">{{ assessment }}</p>
+
+                    <div class="score-ranges">
+                        <h3>Thang điểm đánh giá:</h3>
+                        <ul>
+                            <li><strong>25 - 30 điểm:</strong> Bạn kiểm soát rất tốt áp lực đồng trang lứa.</li>
+                            <li><strong>18 - 24 điểm:</strong> Bạn có một số áp lực nhưng vẫn giữ được sự cân bằng.</li>
+                            <li><strong>10 - 17 điểm:</strong> Bạn đang bị ảnh hưởng đáng kể bởi áp lực đồng trang lứa.</li>
+                            <li><strong>0 - 9 điểm:</strong> Bạn có thể đang chịu áp lực lớn và cần tìm cách giải tỏa.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {% if detailed_scores %}
+                <div class="detailed-scores">
+                    <h2>Chi tiết điểm số từng câu hỏi</h2>
+                    <table class="scores-table">
+                        <thead>
+                            <tr>
+                                <th>Câu hỏi</th>
+                                <th>Điểm số</th>
+                                <th>Đánh giá</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for id, score in detailed_scores.items() %}
+                            <tr>
+                                <td>Câu {{ id }}</td>
+                                <td>
+                                    <span class="score-badge score-badge-{{ score }}">{{ score }}</span>
+                                </td>
+                                <td>
+                                    {% if score == 3 %}
+                                    Lựa chọn đúng đắn, hợp lý nhất
+                                    {% elif score == 2 %}
+                                    Lựa chọn trung lập, có thể chấp nhận được
+                                    {% elif score == 1 %}
+                                    Lựa chọn chưa hợp lý nhưng không quá tiêu cực
+                                    {% else %}
+                                    Lựa chọn kém hợp lý, tiêu cực
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                {% if score < 18 %}
+                <div class="suggestions">
+                    <h2>Một số gợi ý cho bạn</h2>
+                    <div class="suggestion-item">Tự tin vào chính mình và giá trị bản thân, không phụ thuộc vào đánh giá của người khác.</div>
+                    <div class="suggestion-item">Đặt ra mục tiêu riêng và theo đuổi chúng thay vì so sánh với người khác.</div>
+                    <div class="suggestion-item">Học cách từ chối những điều không phù hợp với giá trị và khả năng của bạn.</div>
+                    <div class="suggestion-item">Trò chuyện với người thân, bạn bè hoặc chuyên gia tư vấn nếu bạn cảm thấy áp lực quá lớn.</div>
+                    <div class="suggestion-item">Dành thời gian tìm hiểu về bản thân và xác định những điều thực sự quan trọng đối với bạn.</div>
+                </div>
+                {% endif %}
+
+                <div class="actions">
+                    <a href="/" class="btn">Làm lại bài đánh giá</a>
+                    <a href="javascript:window.print()" class="btn btn-outline">In kết quả</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

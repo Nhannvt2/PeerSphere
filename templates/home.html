@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerSphere - Hỗ trợ Sinh viên</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #f1637f;
+            --secondary-color: #de5fad;
+            --accent-color: #F59E0B;
+            --dark-color: #4B5563;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+    
+        .hero-section {
+            background: linear-gradient(135deg, #EEF2FF, #ff88cf, #ff88cf);
+            padding: 100px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-color);
+        }
+        
+        .hero-section h1 {
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
+        }
+        
+        .hero-section .lead {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: var(--dark-color);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f1638b, #8B5CF6);
+            border: none;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.25);
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #f1638b, #8B5CF6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg,#f1638b, #f1638b);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+            border-color: transparent;
+        }
+        
+        .feature-card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            transition: all 0.4s;
+            height: 100%;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 16px rgba(0,0,0,0.12);
+        }
+        
+        .feature-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            transition: transform 0.5s;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card .btn {
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .about-section {
+            position: relative;
+            padding: 80px 0;
+            background: linear-gradient(135deg, #ECFDF5,  #ff88cf, #ff88cf);
+        }
+        
+        .about-section h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        
+        .about-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .statistics-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, white, #F5F3FF);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            border-top: 5px solid transparent;
+            border-image: linear-gradient(to right, #f16363, #c84eed);
+            border-image-slice: 1;
+        }
+        
+        .statistics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+        }
+        
+        .statistics-card h3 {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .statistics-card p {
+            color: var(--dark-color);
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6, #D946EF);
+            color: rgb(61, 59, 59);
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 0;
+        }
+        
+        .cta-section h2 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .cta-section .btn {
+            background: linear-gradient(135deg, white, #F9FAFB);
+            color: #6366F1;
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+        
+        .cta-section .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 animate__animated animate__fadeInDown">Chào mừng đến với PeerSphere</h1>
+            <p class="lead animate__animated animate__fadeInUp">Nền tảng hỗ trợ sinh viên vượt qua áp lực, phát triển kỹ năng và tự tin tỏa sáng</p>
+            <div class="mt-4 animate__animated animate__fadeInUp animate__delay-1s">
+                <a href="/chat" class="btn btn-primary btn-lg me-2 pulse-animation">Trò chuyện ngay</a>
+                <a href="/quiz" class="btn btn-outline-primary btn-lg">Kiểm tra áp lực</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); background-clip: text; -webkit-text-fill-color: transparent;">PeerSphere có gì?</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="statistics-card">
+                        <h3>Trắc nghiệm tâm lý</h3>
+                        <p>Sinh viên có thể đánh giá khách quan tình trạng của mình</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistics-card">
+                        <h3>Trò chuyện với ChatBot</h3>
+                        <p>Thoải mái trò chuyện với trọ lý được tinh chỉnh cho nhiệm vụ hỗ trợ sinh viên, đem lại trải nghiệm thoải mái </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="statistics-card">
+                        <h3>24 / 7</h3>
+                        <p>Hỗ trợ liên tục bất kỳ khi nào bạn cần, mọi lúc mọi nơi </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 animate__animated animate__fadeInLeft">
+                    <h2 style="background: linear-gradient(135deg, #6366F1, #8B5CF6); background-clip: text; -webkit-text-fill-color: transparent;">Về PeerSphere</h2>
+                    <p>PeerSphere được phát triển bởi một nhóm sinh viên, nhằm tạo ra một nền tảng toàn diện hỗ trợ sinh viên đối phó với áp lực học đường và áp lực đồng trang lứa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="mb-4">Sẵn sàng bắt đầu hành trình phát triển?</h2>
+            <a href="/quiz" class="btn btn-lg">Làm bài trắc nghiệm ngay</a>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <script>
+        // Hiệu ứng hiển thị phần tử khi cuộn trang
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.feature-card, .statistics-card, .testimonial-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+           
+                
+                link.addEventListener('animationend', function() {
+                    this.classList.remove('animate__animated', 'animate__pulse');
+                });
+            });
+    </script>
+</body>
+</html>

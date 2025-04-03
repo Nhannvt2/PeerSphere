@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò chuyện với PeerSphere</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chat-box {
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+        .message-time {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #666;
+            animation: wave 1.3s linear infinite;
+            margin-right: 3px;
+        }
+        .dot:nth-child(2) {
+            animation-delay: -1.1s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: -0.9s;
+        }
+        @keyframes wave {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">PeerSphere</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/quiz">Kiểm tra áp lực</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/chat">Trò chuyện</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chat-container">
+                    <h1 class="mb-4 text-center">Trò chuyện với PeerSphere</h1>
+                    <div class="chat-box" id="chatMessages">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                Xin chào! Tôi là PeerSphere, trợ lý ảo hỗ trợ sinh viên. Bạn có thể hỏi tôi về quản lý stress học tập, phương pháp học tập hiệu quả, hoặc bất kỳ vấn đề nào liên quan đến cuộc sống đại học. Tôi có thể giúp gì cho bạn hôm nay?
+                            </div>
+                        </div>
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="userMessage" placeholder="Nhập tin nhắn...">
+                        <button class="btn btn-primary" type="button" id="sendButton">🤌🏻</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p>© 2025 PeerSphere. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBox = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userMessage');
+            const sendButton = document.getElementById('sendButton');
+            const typingIndicator = document.getElementById('typingIndicator');
+            let ws;
+
+            // Connect to WebSocket
+            function connectWebSocket() {
+                ws = new WebSocket(`ws://${window.location.host}/ws/chat`);
+                
+                ws.onopen = function() {
+                    console.log('WebSocket connected');
+                };
+                
+                ws.onmessage = function(event) {
+                    // Hide typing indicator
+                    typingIndicator.style.display = 'none';
+                    
+                    // Add bot message
+                    appendMessage('bot', event.data);
+                    
+                    // Scroll to bottom
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                };
+                
+                ws.onclose = function() {
+                    console.log('WebSocket disconnected');
+                    // Try to reconnect after 2 seconds
+                    setTimeout(connectWebSocket, 2000);
+                };
+                
+                ws.onerror = function(error) {
+                    console.error('WebSocket error:', error);
+                };
+            }
+            
+            connectWebSocket();
+
+            // Append message to chat
+            function appendMessage(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = sender === 'user' ? 'message user-message' : 'message bot-message';
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = text;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = `Hôm nay, lúc ${new Date().toLocaleTimeString()}`;
+                
+                messageDiv.appendChild(contentDiv);
+                messageDiv.appendChild(timeDiv);
+                
+                chatBox.appendChild(messageDiv);
+            }
+
+            // Send message
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message && ws && ws.readyState === WebSocket.OPEN) {
+                    // Add user message to chat
+                    appendMessage('user', message);
+                    
+                    // Send to server
+                    ws.send(message);
+                    
+                    // Show typing indicator
+                    typingIndicator.style.display = 'block';
+                    
+                    // Clear input
+                    userInput.value = '';
+                    
+                    // Scroll to bottom
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            }
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            
+            userInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

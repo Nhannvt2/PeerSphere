@@ -1,0 +1,125 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: rgb(220, 241, 245);
+  margin: 0;
+  color: #4d3e3e;
+  background-image:
+      linear-gradient(#00000010 1px, transparent 1px),
+      linear-gradient(90deg, #00000010 1px, transparent 1px),
+      url('../img/bg-img.jpg');
+  background-size:
+      40px 40px,
+      40px 40px,
+      cover;
+  background-position: top left, top left, center;
+  background-repeat: repeat, repeat, no-repeat;
+}
+/* Khung chứa quiz */
+.quiz-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff2e6;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* Tiêu đề câu hỏi */
+.question-title {
+  font-size: 1.4em;
+  margin-bottom: 20px;
+}
+
+/* Container cho lựa chọn */
+.options-container {
+  margin-bottom: 20px;
+}
+
+/* Style cho các nhãn lựa chọn */
+.option-label {
+  font-size: 1.1em;
+  cursor: pointer;
+}
+
+/* Nút điều hướng */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-nav,
+.btn-submit {
+  background-color: #f4a460;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-nav:hover,
+.btn-submit:hover {
+  background-color: #e08a3c;
+}
+
+/* Thông báo lỗi */
+.error {
+  color: red;
+  text-align: center;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.box {
+  position: relative;
+  padding: 20px;
+}
+
+.content {
+  position: absolute;
+  text-align: center;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* căn giữa ngang và điều chỉnh dọc */
+}
+
+.head-bar {
+  z-index: 999;
+  position: fixed;
+  background-color: rgb(106, 190, 196, 0.9);
+  width: 100%;
+  margin: 0;
+  padding: 7px 20px;
+  list-style-type: none;
+  background-image: linear-gradient(to bottom, transparent 1%, rgba(93, 93, 153, 0.9));
+  -webkit-filter: grayscale(20%);
+  box-shadow: 0px 2px 4px rgb(0, 0, 0, 0.6); 
+}
+
+.head-bar li {
+  display: inline-block;
+  margin-right: 20px;
+  font-size: 1.2em;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.head-bar li:hover {
+  color: #f4a460;
+}
+
+.foot-bar {
+  z-index: 999;
+  background-color: rgb(93, 93, 143);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 1%, rgb(0, 0, 0)25px);
+  -webkit-filter: grayscale(50%);
+}

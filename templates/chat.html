@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trò chuyện với PeerSphere</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/chat.css">
     <style>
         .chat-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
+            overflow-y: auto;
         }
         .chat-box {
-            height: 500px;
+            height: 50vh;
             border: 1px solid #ddd;
-            border-radius: 10px;
             overflow-y: auto;
             padding: 20px;
             background-color: #f9f9f9;
-            margin-bottom: 20px;
+            border-radius: 0px 0px 8px 8px;
         }
         .message {
             margin-bottom: 15px;
@@ -30,11 +30,13 @@
         .user-message {
             background-color: #e3f2fd;
             margin-left: auto;
-            text-align: right;
+            text-align: justify;
+            width: fit-content;
         }
         .bot-message {
             background-color: #ffffff;
             border: 1px solid #e0e0e0;
+            text-align: justify;
         }
         .message-time {
             font-size: 0.75rem;
@@ -48,6 +50,13 @@
             border-radius: 10px;
             margin-bottom: 15px;
             width: fit-content;
+        }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            box-shadow: 3px 3px 0px #a694c6;
         }
         .dot {
             display: inline-block;
@@ -64,6 +73,36 @@
         .dot:nth-child(3) {
             animation-delay: -0.9s;
         }
+        .window {
+            border: 3px solid #9a89c2;
+            border-radius: 8px;
+            background: #f0eaff;
+            box-shadow: 5px 5px 0px #a694c6;
+        }
+        .title-bar {
+            background: #b4a1d1;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #9a89c2;
+            font-weight: bold;
+        }
+        .buttons {
+        display: flex;
+        gap: 6px;
+        }
+        .button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #9a89c2;
+            cursor: pointer;
+        }
+        .button.close { background: #ff5e5e; }
+        .button.minimize { background: #ffbd4a; }
+        .button.maximize { background: #00ca56; }
         @keyframes wave {
             0%, 60%, 100% {
                 transform: translateY(0);
@@ -75,60 +114,77 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="/">PeerSphere</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Trang chủ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/quiz">Kiểm tra áp lực</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/chat">Trò chuyện</a>
-                    </li>
-                </ul>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark head-bar">
+            <div class="container">
+                <a class="navbar-brand" href="/">PeerSphere</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/quiz">Kiểm tra áp lực</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/chat">Trò chuyện</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-
-    <div class="container py-5">
+        </nav>
+    </header>
+    <div class="container wrapper" style="overflow-y: auto;">
         <div class="row">
             <div class="col-md-12">
                 <div class="chat-container">
-                    <h1 class="mb-4 text-center">Trò chuyện với PeerSphere</h1>
-                    <div class="chat-box" id="chatMessages">
-                        <div class="message bot-message">
-                            <div class="message-content">
-                                Xin chào! Tôi là PeerSphere, trợ lý ảo hỗ trợ sinh viên. Bạn có thể hỏi tôi về quản lý stress học tập, phương pháp học tập hiệu quả, hoặc bất kỳ vấn đề nào liên quan đến cuộc sống đại học. Tôi có thể giúp gì cho bạn hôm nay?
+                    <h1 class="mb-4 text-center" style="animation: wave 1.5s linear infinite;">Trò chuyện với PeerSphere</h1>
+                    <div class="window">
+                        <div class="title-bar">
+                            <span>PeerSphere</span>
+                            <div class="buttons">
+                            <div class="button minimize"></div>
+                            <div class="button maximize"></div>
+                            <div class="button close"></div>
                             </div>
                         </div>
-                        <div class="typing-indicator" id="typingIndicator">
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
+                        <div class="chat-box" id="chatMessages">
+                            <div class="message bot-message">
+                                <div class="message-content">
+                                    Xin chào! Tôi là PeerSphere, trợ lý ảo hỗ trợ sinh viên. Bạn có thể hỏi tôi về quản lý stress học tập, phương pháp học tập hiệu quả, hoặc bất kỳ vấn đề nào liên quan đến cuộc sống đại học. Tôi có thể giúp gì cho bạn hôm nay?
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="userMessage" placeholder="Nhập tin nhắn...">
-                        <button class="btn btn-primary" type="button" id="sendButton">🤌🏻</button>
-                    </div>
+                </div>
+            </div>
+            <div class="chat-container">
+                <div class="typing-indicator" id="typingIndicator">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="userMessage" placeholder="Nhập tin nhắn...">
+                    <button class="btn" style="background-color: rgb(82, 77, 77, 0.9);" type="button" id="sendButton">➡️</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>© 2025 PeerSphere. Tất cả quyền được bảo lưu.</p>
+    <footer class="text-white py-4 foot-bar">
+        <div class="container box">
+            <div class="content">
+            <p>© 2025 PeerSphere. Tất cả quyền được bảo lưu.
+                <br>Được phát triển bởi nhóm sinh viên trường Đại học Công nghệ Thông tin.
+            </p>
+            </div>
         </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -137,7 +193,6 @@
             const sendButton = document.getElementById('sendButton');
             const typingIndicator = document.getElementById('typingIndicator');
             let ws;
-
             // Connect to WebSocket
             function connectWebSocket() {
                 ws = new WebSocket(`ws://${window.location.host}/ws/chat`);
@@ -174,11 +229,15 @@
             function appendMessage(sender, text) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = sender === 'user' ? 'message user-message' : 'message bot-message';
-                
                 const contentDiv = document.createElement('div');
-                contentDiv.className = 'message-content';
-                contentDiv.textContent = text;
-                
+                contentDiv.className = 'message-content text-break';
+
+                if (sender === 'bot') {
+                    contentDiv.innerHTML = marked.parse(text);
+                } else {
+                    contentDiv.textContent = text;
+                }
+
                 const timeDiv = document.createElement('div');
                 timeDiv.className = 'message-time';
                 timeDiv.textContent = `Hôm nay, lúc ${new Date().toLocaleTimeString()}`;

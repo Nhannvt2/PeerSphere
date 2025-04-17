@@ -5,45 +5,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeerSphere - Hỗ trợ Sinh viên</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../static/css/home.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <style>
         :root {
             /* --primary-color: #f1637f; */
-            --primary-color: #6366F1;
-            --secondary-color: #de5fad;
+            --primary-color: rgba(93, 93, 153, 0.9);
+            --secondary-color: #697EA0;
             --accent-color: #F59E0B;
             --dark-color: #4B5563;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            /* background-color: #f8f9fa; */
         }
     
         .hero-section {
-            background: linear-gradient(135deg, #EEF2FF, #ff88cf, #ff88cf);
-            padding: 100px 0;
-            text-align: center;
-            border-bottom: 5px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(93, 93, 153, 0.95), #81BEC3);
+            padding-bottom: 100px; /* Tăng padding-bottom để chừa không gian cho sóng */
         }
-        
+
+        .home-img {
+            position: relative;
+            z-index: 5; /* Tăng z-index để đảm bảo nội dung luôn hiển thị trên các lớp khác */
+        }
+
         .hero-section h1 {
             font-weight: 800;
             margin-bottom: 1rem;
-            color: var(--primary-color);
-            text-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .hero-section .lead {
             font-size: 1.3rem;
             margin-bottom: 2rem;
-            color: var(--dark-color);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Các lớp sóng chuyển động liên tục */
+        .wave-container {
+            position: absolute;
+            bottom: 0; /* Đặt vị trí ở dưới cùng */
+            left: 0;
+            width: 100%;
+            height: 100px; /* Giảm chiều cao của container sóng */
+            overflow: hidden;
+            z-index: 4; /* Đảm bảo sóng nằm dưới nội dung nhưng trên nền */
+            pointer-events: none; /* Đảm bảo sóng không can thiệp vào tương tác người dùng */
+        }
+
+        .wave1, .wave2, .wave3 {
+            position: absolute;
+            bottom: 0; /* Đảm bảo sóng bám vào phía dưới */
+            left: 0;
+            width: 200%;
+            height: 100px; /* Điều chỉnh chiều cao của sóng */
+            background-repeat: repeat-x;
+            background-position: 0 bottom;
+            transform-origin: center bottom;
+        }
+
+        .wave1 {
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23ffffff" opacity="0.7"></path></svg>');
+            animation: wave 25s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            z-index: 15;
+            height: 60px; /* Chiều cao riêng cho lớp sóng 1 */
+        }
+
+        .wave2 {
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23ffffff" opacity="0.5"></path></svg>');
+            animation: wave 20s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+            opacity: 0.5;
+            z-index: 10;
+            height: 70px; /* Chiều cao riêng cho lớp sóng 2 */
+        }
+
+        .wave3 {
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23ffffff" opacity="0.3"></path></svg>');
+            animation: wave 30s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.5s infinite, swell 7s ease -1.25s infinite;
+            opacity: 0.3;
+            z-index: 5;
+            height: 85px; /* Chiều cao riêng cho lớp sóng 3 */
+        }
+
+        @keyframes wave {
+            0% {
+                transform: translateX(0) translateZ(0);
+            }
+            50% {
+                transform: translateX(-25%) translateZ(0);
+            }
+            100% {
+                transform: translateX(-50%) translateZ(0);
+            }
+        }
+
+        @keyframes swell {
+            0%, 100% {
+                transform: translateY(2px); /* Giảm biên độ dao động */
+            }
+            50% {
+                transform: translateY(-2px); /* Giảm biên độ dao động */
+            }
+        }
+
+        .wave-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: url('../img/home-bg.jpg');
+            background-size: cover;
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        /* Floating elements */
+        .floating {
+            animation-name: floating;
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Nút CTA cải tiến */
+        .hero-section .btn-primary {
+            background: white;
+            color: rgba(93, 93, 153, 0.9);
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 30px;
+        }
+
+        .hero-section .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-section .btn-outline-primary {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+            padding: 12px 25px;
+            font-weight: 600;
+            border-radius: 30px;
+        }
+
+        .hero-section .btn-outline-primary:hover {
+            background: white;
+            color: rgba(93, 93, 153, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Media query để điều chỉnh trên thiết bị di động */
+        @media (max-width: 768px) {
+            .wave-container {
+                height: 70px; /* Giảm chiều cao trên mobile */
+            }
+            
+            .hero-section {
+                padding-bottom: 100px; /* Giảm padding dưới trên mobile */
+            }
+            
+            .wave1, .wave2, .wave3 {
+                height: 50px; /* Giảm chiều cao sóng trên mobile */
+            }
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #f1638b, #8B5CF6);
+            background: linear-gradient(135deg, rgba(93, 93, 153, 0.9), #81BEC3);
             border: none;
             box-shadow: 0 4px 6px rgba(99, 102, 241, 0.25);
             transition: all 0.3s;
@@ -62,7 +208,7 @@
         }
         
         .btn-outline-primary:hover {
-            background: linear-gradient(135deg,#f1638b, #f1638b);
+            background: linear-gradient(135deg, rgba(93, 93, 153, 0.9), #81BEC3);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
@@ -120,7 +266,7 @@
         .about-section {
             position: relative;
             padding: 80px 0;
-            background: linear-gradient(135deg, #ECFDF5,  #ff88cf, #ff88cf);
+            background: linear-gradient(135deg, rgba(93, 93, 153, 0.9), #81BEC3);
         }
         
         .about-section h2 {
@@ -151,39 +297,6 @@
             }
         }
         
-        .statistics-card {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, white, #F5F3FF);
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            border-top: 5px solid transparent;
-            border-image: linear-gradient(to right, #f16363, #c84eed);
-            border-image-slice: 1;
-        }
-        
-        .statistics-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
-        }
-        
-        .statistics-card h3 {
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .statistics-card p {
-            color: var(--dark-color);
-            font-size: 1rem;
-            margin-bottom: 0;
-        }
-        
         .testimonial-card {
             background: white;
             border-radius: 15px;
@@ -203,93 +316,289 @@
             color: var(--primary-color);
         }
         
-        .cta-section {
-            background: linear-gradient(135deg, #6366F1, #8B5CF6, #D946EF);
-            color: rgb(61, 59, 59);
-            padding: 60px 0;
+        /* CSS được sửa đổi để icon hoạt động trực tiếp */
+        /* CSS cho statistics-card với emoji */
+        .statistics-card {
             text-align: center;
-            border-radius: 0;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(230, 230, 250, 0.5);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .cta-section h2 {
-            font-weight: 700;
+
+        .statistics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #6366F1, #8B5CF6);
+        }
+
+        .statistics-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .emoji-icon {
+            font-size: 3.5rem;
             margin-bottom: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: block;
+            transition: transform 0.3s ease;
         }
-        
+
+        .statistics-card:hover .emoji-icon {
+            transform: scale(1.2);
+        }
+
+        .statistics-card h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .statistics-card p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        /* CSS cho cta-section */
+        .cta-section {
+            background: linear-gradient(135deg, #81BEC3, rgba(93, 93, 153, 0.9));
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .cta-section h2 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         .cta-section .btn {
-            background: linear-gradient(135deg, white, #F9FAFB);
+            background: white;
             color: #6366F1;
             border: none;
-            padding: 12px 25px;
-            font-weight: 600;
-            border-radius: 30px;
+            padding: 15px 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 50px;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
-        
+
         .cta-section .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            color: #5145CD;
+        }
+
+        /* Thêm hiệu ứng sóng cho CTA */
+        .cta-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .cta-wave svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 70px;
+        }
+
+        .cta-wave .shape-fill {
+            fill: #FFFFFF;
         }
     </style>
 </head>
 <body>
-
     <section class="hero-section">
-        <div class="container">
-            <h1 class="display-4 animate__animated animate__fadeInDown">Chào mừng đến với PeerSphere</h1>
-            <p class="lead animate__animated animate__fadeInUp">Nền tảng hỗ trợ sinh viên vượt qua áp lực, phát triển kỹ năng và tự tin tỏa sáng</p>
-            <div class="mt-4 animate__animated animate__fadeInUp animate__delay-1s">
-                <a href="/chat" class="btn btn-primary btn-lg me-2 pulse-animation">Trò chuyện ngay</a>
-                <a href="/quiz" class="btn btn-outline-primary btn-lg">Kiểm tra áp lực</a>
+        <div class="wave-animation"></div>
+        <div class="home-img">
+            <div class="container">
+                <h1 class="display-4 animate__animated animate__fadeInDown" style="color: #171717;">Chào mừng đến với PeerSphere</h1>
+                <p class="lead animate__animated animate__fadeInUp" style="color: #000000;">Nền tảng hỗ trợ sinh viên vượt qua áp lực, phát triển kỹ năng và tự tin tỏa sáng</p>
+                <div class="mt-4 animate__animated animate__fadeInUp animate__delay-1s">
+                    <a href="/chat" class="btn btn-primary btn-lg me-2 pulse-animation">Trò chuyện ngay <i class="fas fa-comment-dots ms-2"></i></a>
+                    <a href="/quiz" class="btn btn-outline-primary btn-lg">Kiểm tra áp lực <i class="fas fa-clipboard-check ms-2"></i></a>
+                </div>
             </div>
+        </div>
+        <div class="wave-container">
+            <div class="wave1"></div>
+            <div class="wave2"></div>
+            <div class="wave3"></div>
         </div>
     </section>
 
+    <!-- Phần statistics-card đã sửa để hoạt động với icon -->
+    <!-- Phần statistics-card với emoji -->
     <section class="py-5 bg-light">
         <div class="container">
-            <h2 class="text-center mb-5" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); background-clip: text; -webkit-text-fill-color: transparent;">PeerSphere có gì?</h2>
+            <h2 class="text-center mb-5" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); -webkit-background-clip: text; background-clip: text; color: transparent;">PeerSphere có gì?</h2>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="statistics-card">
+                        <span class="emoji-icon">📝 </span>
                         <h3>Trắc nghiệm tâm lý</h3>
-                        <p>Sinh viên có thể đánh giá khách quan tình trạng của mình</p>
+                        <p>Sinh viên có thể đánh giá khách quan tình trạng của mình và nhận được lời khuyên phù hợp</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="statistics-card">
+                        <span class="emoji-icon">🤖</span>
                         <h3>Trò chuyện với ChatBot</h3>
-                        <p>Thoải mái trò chuyện với trọ lý được tinh chỉnh cho nhiệm vụ hỗ trợ sinh viên, đem lại trải nghiệm thoải mái </p>
+                        <p>Thoải mái trò chuyện với trợ lý được tinh chỉnh đặc biệt cho nhiệm vụ hỗ trợ sinh viên</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="statistics-card">
+                        <span class="emoji-icon">⏰</span>
                         <h3>24 / 7</h3>
-                        <p>Hỗ trợ liên tục bất kỳ khi nào bạn cần, mọi lúc mọi nơi </p>
+                        <p>Hỗ trợ liên tục bất kỳ khi nào bạn cần, mọi lúc mọi nơi không giới hạn</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <section class="about-section">
+    
+    <section class="statistics-card" style="background-color: #FAF9F5;">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 animate__animated animate__fadeInLeft">
-                    <h2 style="background: linear-gradient(135deg, #6366F1, #8B5CF6); background-clip: text; -webkit-text-fill-color: transparent;">Về PeerSphere</h2>
-                    <p>PeerSphere được phát triển bởi một nhóm sinh viên, nhằm tạo ra một nền tảng toàn diện hỗ trợ sinh viên đối phó với áp lực học đường và áp lực đồng trang lứa.</p>
+            <h2 class="text-center mb-5" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); background-clip: text; -webkit-background-clip: text; color: transparent;">Đánh giá từ người dùng</h2>
+            
+            <!-- Thêm div wrapper với overflow-x: auto để tạo cuộn ngang -->
+            <div class="testimonials-wrapper" style="overflow-x: auto; padding: 10px 0;">
+                <!-- Thay đổi row thành d-flex và không còn g-4 -->
+                <div class="d-flex" style="min-width: max-content; gap: 20px;">
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"Tôi rất ấn tượng với khả năng lắng nghe và đồng cảm của ChatBot. Nó hiểu được các vấn đề của sinh viên chúng tôi."</p>
+                            <p class="testimonial-author">Nguyễn Viết Thiện Nhân</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"Kết quả từ bài trắc nghiệm áp lực giúp tôi nhận ra các vấn đề cần cải thiện trong cuộc sống sinh viên của mình."</p>
+                            <p class="testimonial-author">Phan Huỳnh Hưng</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"PeerSphere giúp tôi đối mặt với áp lực thi cử một cách tự tin hơn và có phương pháp ôn tập hiệu quả."</p>
+                            <p class="testimonial-author">Nguyễn Huy</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"PeerSphere không chỉ là một công cụ học tập mà còn là người bạn đồng hành giúp tôi vượt qua những thời điểm căng thẳng."</p>
+                            <p class="testimonial-author">Nguyễn Văn Nam</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"ChatBot của PeerSphere đã giúp tôi xây dựng lộ trình học tập hiệu quả và quản lý thời gian tốt hơn."</p>
+                            <p class="testimonial-author">Lê Nguyên Khang</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"Tôi thường xuyên sử dụng PeerSphere để tìm kiếm lời khuyên về cân bằng giữa học tập và hoạt động ngoại khóa."</p>
+                            <p class="testimonial-author">Phan Tuấn Anh</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"Nhờ có PeerSphere, tôi đã tìm được niềm vui trong học tập và không còn cảm thấy quá tải với các bài tập."</p>
+                            <p class="testimonial-author">Trần Bá Phong</p>
+                        </div>
+                    </div>
+                    <div style="min-width: 320px; width: 320px;">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">"Công cụ này đã hỗ trợ tôi trong việc lập kế hoạch học tập và phát triển kỹ năng mềm. Thực sự hữu ích!"</p>
+                            <p class="testimonial-author">Đào Trọng Định</p>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            
+            <!-- Chỉ báo cuộn -->
+            <div class="text-center mt-3">
+                <p class="text-muted"><small>Cuộn sang phải để xem thêm đánh giá →</small></p>
             </div>
         </div>
     </section>
 
+    <!-- Phần cta-section đã cập nhật -->
     <section class="cta-section">
         <div class="container">
             <h2 class="mb-4">Sẵn sàng bắt đầu hành trình phát triển?</h2>
-            <a href="/quiz" class="btn btn-lg">Làm bài trắc nghiệm ngay</a>
+            <p>Chỉ mất vài phút để đánh giá mức độ áp lực và nhận được hỗ trợ phù hợp với nhu cầu của riêng bạn</p>
+            <a href="/quiz" class="btn btn-lg">
+                Làm bài trắc nghiệm ngay
+                <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+        <div class="cta-wave">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+            </svg>
         </div>
     </section>
+
+    <div class="text-white py-4 foot-bar">
+        <div class="container box">
+            <div class="content">
+            <p>© 2025 PeerSphere. Tất cả quyền được bảo lưu.
+                <br>Được phát triển bởi nhóm sinh viên trường Đại học Công nghệ Thông tin.
+            </p>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
@@ -317,6 +626,21 @@
                     this.classList.remove('animate__animated', 'animate__pulse');
                 });
             });
+    </script>
+    <script>
+        // Tạo hiệu ứng sóng chuyển động
+        document.addEventListener('DOMContentLoaded', function() {
+            const wave = document.querySelector('.wave');
+            let position = 0;
+            
+            function animateWave() {
+                position -= 1;
+                wave.style.backgroundPositionX = position + 'px';
+                requestAnimationFrame(animateWave);
+            }
+            
+            animateWave();
+        });
     </script>
 </body>
 </html>
